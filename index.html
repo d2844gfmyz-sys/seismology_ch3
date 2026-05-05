@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地震學第三章：地球結構</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            /* 活潑明亮的漸層背景，讓人有精神想學習 */
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            color: #000000; /* 全局字體設定為純黑色 */
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 內容卡片樣式 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* 分頁切換動畫 */
+        .page-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .page-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 重點紅字標記 */
+        .highlight-red {
+            color: #dc2626; /* Tailwind red-600 */
+            font-weight: 900;
+        }
+
+        /* 問題討論區塊樣式 */
+        .qa-section {
+            background: linear-gradient(to right, #fffbeb, #fef3c7);
+            border-left: 6px solid #f59e0b;
+            color: #000000;
+        }
+
+        /* 側邊漢堡選單動畫 */
+        .sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        p, li {
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+            color: #000000; /* 強制段落文字為黑色 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 漢堡選單按鈕 -->
+    <button onclick="toggleSidebar()" class="fixed top-5 left-5 z-50 p-3 bg-white text-blue-600 rounded-full shadow-lg hover:scale-105 transition-transform focus:outline-none border border-blue-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
+
+    <!-- 側邊選單 -->
+    <div id="sidebar" class="sidebar fixed inset-y-0 left-0 w-72 bg-white shadow-2xl z-40 transform -translate-x-full overflow-y-auto">
+        <div class="p-8 pt-20">
+            <h2 class="text-2xl font-black text-black mb-6 border-b-2 border-blue-200 pb-2">目錄導覽</h2>
+            <nav class="flex flex-col space-y-3">
+                <button onclick="changePage(1)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">1. 3.1 引言</button>
+                <button onclick="changePage(2)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">2. 3.2 折射地震學</button>
+                <button onclick="changePage(3)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">3. 3.3 反射地震學</button>
+                <button onclick="changePage(4)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">4. 3.4 球形地球中的地震波</button>
+                <button onclick="changePage(5)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">5. 3.5 體波走時研究</button>
+                <button onclick="changePage(6)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">6. 3.6 各向異性地球結構</button>
+                <button onclick="changePage(7)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">7. 3.7 衰減與非彈性</button>
+                <button onclick="changePage(8)" class="text-left px-4 py-3 rounded-lg hover:bg-blue-50 text-black font-bold transition-colors">8. 3.8 地函與地核的成分</button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 遮罩層 -->
+    <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-30 z-30 hidden transition-opacity"></div>
+
+    <!-- 主內容區 -->
+    <main class="max-w-4xl mx-auto px-6 py-16">
+        
+        <!-- 標題列 -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-black text-black drop-shadow-sm mb-2">地震學第三章：地球結構</h1>
+            <p class="text-lg font-bold text-gray-800">互動式重點整理與問題討論</p>
+        </header>
+
+        <div class="glass-card p-8 md:p-12 relative">
+            
+            <!-- 頁碼指示器 -->
+            <div class="absolute top-6 right-8 text-black font-bold bg-white px-3 py-1 rounded-full shadow-sm text-sm border border-gray-200">
+                <span id="page-num">1</span> / 8
+            </div>
+
+            <!-- 第1部分 -->
+            <div id="page1" class="page-content active">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">1. 3.1 引言 (Introduction)</h2>
+                <div class="text-lg">
+                    <p>地震學的主要應用是確定地球內部的地震波速度分佈，進而推導其彈性性質，這被稱為<span class="highlight-red">「地球結構」</span>。這種分佈為地球內部的礦物學、化學與熱狀態提供了基本約束。地震數據的解析力優於其他地球物理方法（如重力或磁力），能精確指示<span class="highlight-red">核函邊界 (CMB)</span>的深度及其性質的劇烈變化。</p>
+                    <p>地震學研究的核心數據是<span class="highlight-red">地震波走時 (travel times)</span>。為了將到達時間轉換為走時，必須已知震源的時間與位置。走時數據包含了震源資訊與介質特性，區分兩者是地震學研究的挑戰。透過處理走時數據，科學家可以解決「反演問題」(inverse problem)，即從地表觀測到的數據推算深部的速度結構。本章採取由簡入繁的建模方式，從均勻各向同性的水平層狀模型開始，逐步引入球形幾何、各向異性及非彈性行為，以更準確地描述真實地球。</p>
+                </div>
+                <!-- 3.1 沒有問題討論 -->
+            </div>
+
+            <!-- 第2部分 -->
+            <div id="page2" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">2. 3.2 折射地震學 (Refraction Seismology)</h2>
+                <div class="text-lg">
+                    <p>折射地震學是最簡單的速度結構測定方法，<span class="highlight-red">將地球視為由均勻速度物質組成的水平層</span>。此技術利用在界面處發生「臨界折射」而產生的<span class="highlight-red">首波 (head waves)</span>來確定地層的速度與厚度。首波的存在前提是下層速度高於上層。</p>
+                    <p>歷史上，莫氏 (Mohorovičić) 透過觀察兩組 P 波抵達，辨識出地殼與地函的分界。<span class="highlight-red">折射實驗結果通常以「記錄剖面」(record sections) 展示</span>，透過調整速度軸（減少走時圖）使波形特徵更易於辨識。若層面非水平，則需使用「反向剖面」(reversed profile) 實驗，透過在不同方向觀測視速度（apparent velocities）來計算界面的真實傾角與深度。</p>
+                    <p>此外，振幅研究（如合成地震圖）能幫助區分「銳利界面」與「速度梯度帶」，因為波長會影響波對結構的感應。全球觀測顯示，<span class="highlight-red">海洋地殼約 7 公里厚且較均勻，而大陸地殼則較厚（約 35-40 公里）且結構複雜</span>。</p>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl">
+                    <h3 class="text-xl font-black mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-bold text-lg mb-1">Pg、Pn、PmP 說明</p>
+                            <ul class="list-disc pl-5">
+                                <li><strong>Pg</strong>：是指在速度較慢的淺層地殼中傳播的<span class="highlight-red">直達 P 波</span>。</li>
+                                <li><strong>Pn</strong>：是指在深層高速層（地函）中傳播，並在地殼與地函界面（莫氏不連續面）發生臨界折射而產生的<span class="highlight-red">首波（head wave）</span>。</li>
+                                <li><strong>PmP</strong>：是指從莫氏不連續面（Moho）反射回來的<span class="highlight-red">P 波</span>。</li>
+                            </ul>
+                        </div>
+                        <div class="border-t border-amber-200 pt-4">
+                            <p class="font-bold text-lg mb-1">如何發現 Moho 面？</p>
+                            <p><strong>發現過程</strong>：1909 年，莫氏 (Mohorovičić)透過觀察區域地震的走時數據，發現了兩組 P 波抵達。他辨識出第一組是經過深部高速層（7.7 km/s）傳播的波（即 Pn），第二組是在約 50 公里厚、速度較慢（5.6 km/s）的淺層傳播的直達波（即 Pg）。這證明了地殼與地函這兩個性質截然不同的層狀結構存在。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第3部分 -->
+            <div id="page3" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">3. 3.3 反射地震學 (Reflection Seismology)</h2>
+                <div class="text-lg">
+                    <p><span class="highlight-red">反射地震學利用反射波來確定地殼內的速度，在油氣勘探中至關重要</span>。在單一水平層模型中，反射波的走時曲線呈<span class="highlight-red">雙曲線</span>，其頂點對應垂直路徑。透過Dix方程，可以從均方根速度 (RMS velocity) 計算出「層速度」 (interval velocity)。</p>
+                    <p>現代反射地震學的核心是<span class="highlight-red">多頻道幾何 (multichannel geometry) 與 共中點 (CMP) 疊加</span>。透過將具有相同中點但不同偏移距 (offset) 的地震記錄進行「正常時差補正」(NMO) 並求和，可以增強反射訊號並抑制雜訊（如多重反射波或表面波）。為了提高影像解析度，會使用<span class="highlight-red">反褶積 (deconvolution)</span>來「銳化」反射脈衝。針對傾斜界面或複雜構造，則需進行<span class="highlight-red">移位 (migration)</span>處理，將反射點歸位到其真實的空間位置，消除如「蝴蝶結」(bowtie) 等幾何假象。</p>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl">
+                    <h3 class="text-xl font-black mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    <div>
+                        <p class="font-bold text-lg mb-1">ray parameter</p>
+                        <p><strong>定義</strong>：射線參數 p 是一個在整條地震波射線路徑上保持不變的常數。</p>
+                        <ul class="list-disc pl-5">
+                            <li>在<strong>平坦地球模型</strong>中， p = sin i / v ，其中 i 是入射角， v 是速度。</li>
+                            <li>在<strong>球形地球模型</strong>中， p = r sin i / v ，其中 r 是徑向距離。</li>
+                        </ul>
+                        <p class="mt-2"><strong>物理意義</strong>： p 等於走時曲線 T(Δ) 的斜率（dT / dΔ），也是地表觀測到的<span class="highlight-red">視速度的倒數</span>。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第4部分 -->
+            <div id="page4" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">4. 3.4 球形地球中的地震波</h2>
+                <div class="text-lg">
+                    <p>當觀測距離超過幾百公里時，必須考慮地球的曲率。在球形幾何中，<span class="highlight-red">射線參數 p</span> 定義為 p = r sin i / v ，在整條射線路徑上為常數。隨著射線向深處傳播， r 減小且 v 通常增加，導致射線最終在臨界深度處轉向（ i = 90° ）並返回地表。</p>
+                    <p>不同的速度分佈會產生特定的走時曲線：</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><span class="highlight-red">速度隨深度緩慢增加</span>：產生單一且連續的走時曲線。</li>
+                        <li><span class="highlight-red">速度快速增加</span>：會導致射線在特定距離發生<span class="highlight-red">三叉現象 (triplication)</span>，即同一個距離有三組波抵達。</li>
+                        <li><span class="highlight-red">低速帶 (LVZ)</span>：會產生<span class="highlight-red">陰影區 (shadow zone)</span>，在此距離範圍內沒有幾何射線抵達。<span class="highlight-red">赫格洛茲-魏舍特 (Herglotz–Wiechert) 積分</span>是將球形走時曲線轉換為速度-深度分佈的經典反演方法。</li>
+                    </ul>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl">
+                    <h3 class="text-xl font-black mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-bold text-lg mb-1">為何地震波傳遞時遇到高速帶，某些地面的接收站會接收到多次到時？</p>
+                            <p><strong>原因</strong>：當速度隨深度急劇增加（高速帶）時，地震波會被強烈地向上折射。這會導致在特定的距離範圍內，有三條具有不同射線參數 p 的射線抵達同一個位置。<br>
+                            <strong>現象</strong>：這種現象稱為<span class="highlight-red">三叉現象（triplication）</span>，在走時曲線上表現為三個不同的分支。這在觀測地函過渡帶（410 km 和 660 km 不連續面）時非常常見。</p>
+                        </div>
+                        <div class="border-t border-amber-200 pt-4">
+                            <p class="font-bold text-lg mb-1">為何地震波傳遞時遇到低速帶，某些地面的接收站會收不到波？</p>
+                            <p><strong>原因</strong>：當射線進入低速帶（LVZ）時，會向下彎曲而非向上，導致沒有射線能在該深度轉向並返回地表。<br>
+                            <strong>現象</strong>：這會在地球表面產生一個<span class="highlight-red">陰影區（shadow zone）</span>，即在特定的距離範圍內，幾何光學預測沒有直達射線抵達。例如，外核的低 P 波速度產生的核心陰影區。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第5部分 -->
+            <div id="page5" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">5. 3.5 體波走時研究 (Body Wave Travel Time Studies)</h2>
+                <div class="text-lg">
+                    <p>透過編制全球地震數據，科學家建立了如 JB、IASP91 和 PREM 等標準地球模型。<span class="highlight-red">地球基本上由地殼、固態地函、液態外核與固態內核組成</span>。地函被分為上地函、過渡帶（由 410 和 660 公里處的速度突變標記）與下地函。</p>
+                    <p><span class="highlight-red">地核研究是體波地震學的一大亮點</span>。由於外核 P 波速度低於地函，會產生一個廣大的陰影區 (98°–145°)。穿過外核的波稱為 PKP，穿過內核則稱為 PKIKP。在下地函底部存在複雜的<span class="highlight-red">D″ 層</span>，包含速度突變、各向異性，以及可能由熔融引起的「超低速帶」(ULVZ)。模擬顯示，體波不應僅視為幾何射線，而是複雜的波前，與多個界面（如 Moho、過渡帶、CMB）互動產生豐富的震相。</p>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl space-y-6">
+                    <h3 class="text-xl font-black mb-2 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    
+                    <div>
+                        <p class="font-bold text-lg mb-1">如何發現核幔邊界 (core mantle boundary)？</p>
+                        <p><strong>發現過程</strong>：雖然早期透過重力數據已推測地核存在，但地震學提供了直接證據。1906 年，理查德·奧爾德姆（Richard Oldham）發現了<span class="highlight-red">P 波的陰影區</span>（約 98° 到 145° 之間），這顯示地球深處存在一個低速的核心。<br>
+                        <strong>性質</strong>：地震數據精確指出了核幔邊界（CMB）的深度（約 2890 km），並顯示在該邊界處 P 波速度驟降，且 S 波無法穿過（證明外核為液態）。</p>
+                    </div>
+                    
+                    <div class="border-t border-amber-200 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="font-bold text-lg mb-1">各種體波波相介紹</p>
+                            <ul class="list-disc pl-5 text-sm">
+                                <li><strong>P</strong>：壓縮波。</li>
+                                <li><strong>S</strong>：剪力波。</li>
+                                <li><strong>PP、PPP</strong>：在地面反射一次或兩次的 P 波。</li>
+                                <li><strong>pP、sP</strong>：從震源向上出發，在震央附近地面反射的波，常用於確定震源深度。</li>
+                                <li><strong>PcP、ScS</strong>：在核幔邊界（CMB）反射的 P 波或 S 波。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg mb-1">core phases 介紹</p>
+                            <ul class="list-disc pl-5 text-sm">
+                                <li><strong>PKP</strong>：穿過地函、液態外核，再穿過地函回到地表的 P 波。</li>
+                                <li><strong>PKIKP</strong>：穿過內核的 P 波。</li>
+                                <li><strong>PKiKP</strong>：在內核邊界（ICB）反射的 P 波。</li>
+                                <li><strong>SKS</strong>：以 S 波進入地函，穿過外核時轉為 P 波，離開核心後再轉回 S 波傳回地表。</li>
+                                <li><strong>PKKP</strong>：在核心內部邊界（CMB 下方）發生一次反射的波。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-amber-200 pt-4">
+                        <p class="font-bold text-lg mb-1">甚麼是 antipodal focusing？</p>
+                        <p><strong>定義</strong>：指地震波在對蹠點（antipode，即震源球對應的 180° 位置）發生能量聚集的現象。<br>
+                        <strong>原因</strong>：由於地球近似球形，從震源向各個方向發出的射線會在 180° 處同時抵達，導致波相（如 PP 和 PKP）在該點的振幅顯著增強。</p>
+                    </div>
+
+                    <div class="border-t border-amber-200 pt-4">
+                        <p class="font-bold text-lg mb-1">Upper mantle structure，低速帶與高速帶的說明</p>
+                        <ul class="list-disc pl-5">
+                            <li><strong>地震岩石圈 (Lid)</strong>：位於最上層，具有較高的 P 波（~8.1 km/s）與 S 波速度（~4.5 km/s）。其厚度隨地區改變，在大陸克拉通下可達 200 公里。</li>
+                            <li><strong>低速帶 (LVZ)</strong>：位於岩石圈下方，速度較低且衰減（attenuation）較強。這通常對應於機械性質脆弱的<span class="highlight-red">軟流圈</span>，可能與部分熔融或物質強度降低有關。</li>
+                            <li><strong>過渡帶</strong>：位於 410 公里與 660 公里不連續面之間，此處的速度隨深度快速增加，主要由礦物相變引起。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第6部分 -->
+            <div id="page6" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">6. 3.6 各向異性地球結構 (Anisotropic Earth Structure)</h2>
+                <div class="text-lg">
+                    <p>雖然地球大體上是各向同性的，但有時必須考慮<span class="highlight-red">「各向異性」，即地震波速度隨傳播或振動方向而異</span>。這通常是由礦物（如橄欖石）在應力下產生優選取向 (LPO) 引起的。</p>
+                    <p>主要的各向異性類型包括：</p>
+                    <ul class="list-disc pl-5">
+                        <li><span class="highlight-red">橫向各向同性 (Transverse Isotropy)</span>：如層狀岩石，振動方向在層面內的速度快於垂直方向。</li>
+                        <li><span class="highlight-red">方位各向異性 (Azimuthal Anisotropy)</span>：波速隨水平方位角改變。</li>
+                    </ul>
+                    <p><span class="highlight-red">剪力波分裂 (Shear Wave Splitting)</span> 是研究各向異性的強力工具。當剪力波進入各向異性介質時，會分裂成兩個以不同速度運動的正交脈衝。觀測顯示，<span class="highlight-red">內核存在顯著的各向異性，平行於轉動軸的方向速度比赤道平面快約 3 秒</span>，這暗示內核鐵晶體的排列方式。</p>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl space-y-6">
+                    <h3 class="text-xl font-black mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    
+                    <div>
+                        <p class="font-bold text-lg mb-1">說明 Anisotropic earth structure</p>
+                        <p><strong>定義</strong>：指地球物質的彈性性質隨方向而異，導致地震波速度隨<span class="highlight-red">傳播方向或振動方向</span>改變。<br>
+                        <strong>成因</strong>：</p>
+                        <ul class="list-disc pl-5">
+                            <li><span class="highlight-red">LPO（晶格優選取向）</span>：礦物（如橄欖石）在應力流動下產生定向排列。</li>
+                            <li><span class="highlight-red">SPO（形狀優選取向）</span>：由不同速度的薄層堆疊或含流體裂隙引起的結構方向性。</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border-t border-amber-200 pt-4">
+                        <p class="font-bold text-lg mb-1">說明剪力波分離 (Shear Wave Splitting)</p>
+                        <p><strong>現象</strong>：當剪力波進入各向異性介質時，會分裂成兩個偏振方向互相垂直、傳播速度不同的脈衝。<br>
+                        <strong>觀測</strong>：這與光學中的雙折射現象類似，分裂出的兩個波分別沿著介質的「快軸」與「慢軸」振動。透過測量兩者的<span class="highlight-red">時間延遲 (δt)</span>與<span class="highlight-red">偏振角度 (ϕ)</span>，可以推算介質的各向異性強度與方向。</p>
+                    </div>
+
+                    <div class="border-t border-amber-200 pt-4">
+                        <p class="font-bold text-lg mb-1">為何使用 SKS 波相研究剪力波分離？</p>
+                        <p><strong>原因</strong>：SKS 波在穿過液態外核時僅以 P 波傳播，當它重新進入地函轉回 S 波時，其偏振方向必然是純粹的<span class="highlight-red">徑向（SV）方向</span>。<br>
+                        <strong>優勢</strong>：因為已知的起始偏振方向是單一的，如果在接收站觀測到切向（transverse）分量上的能量，則可以確定該剪力波在離開核心後的地函或地殼路徑中經歷了各向異性引起的分離。這排除震源端各向異性的干擾，使其成為研究接收站下方各向異性的強力工具。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第7部分 -->
+            <div id="page7" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">7. 3.7 衰減與非彈性 (Attenuation and Anelasticity)</h2>
+                <div class="text-lg">
+                    <p>地震波在傳播過程中，振幅會因幾何擴散、散射、多路徑傳播與<span class="highlight-red">非彈性 (anelasticity)</span>而減小。非彈性涉及地震能向熱能的轉換。這可以用「品質因子」 Q 來衡量，Q 越低代表衰減越嚴重。</p>
+                    <p><span class="highlight-red">衰減對溫度非常敏感，隨溫度增加呈指數級增長</span>，因此可用於探測地函對流與岩漿庫（如東太平洋隆起下方的高衰減區）。由於衰減的存在，波會發生「物理彌散」，即不同頻率的波速不同，以符合因果律。<span class="highlight-red">地球中 Q 的分佈顯示，軟流圈 (80-220 km) 衰減最強</span>，可能與部分熔融有關。相比之下，冷而剛硬的下沉板塊具有極高的 Q 值。</p>
+                </div>
+                <div class="qa-section mt-10 p-6 rounded-xl">
+                    <h3 class="text-xl font-black mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 問題討論</h3>
+                    <div>
+                        <p class="font-bold text-lg mb-1">波傳遞時能量如何衰減 ?</p>
+                        <p><span class="highlight-red">幾何擴散 (Geometric Spreading)</span>：這是最明顯的衰減原因，指地震波能量在傳播過程中，隨著波前 (wavefront) 的擴張，單位面積上的能量會隨之降低。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第8部分 -->
+            <div id="page8" class="page-content">
+                <h2 class="text-3xl font-black mb-6 text-black border-l-4 border-blue-500 pl-4">8. 3.8 地函與地核的成分</h2>
+                <div class="text-lg">
+                    <p>透過結合地震速度、密度（由質量與轉動慣量約束）及高壓物理實驗，科學家推導出地球的化學組成。<span class="highlight-red">地函的模型通常以「熱榴石岩」(pyrolite) 為代表</span>，主要由橄欖石、輝石與石榴石組成。</p>
+                    <p>隨著壓力增加，礦物會發生相變，這解釋了地震不連續面的成因：</p>
+                    <ul class="list-disc pl-5 mb-4">
+                        <li><span class="highlight-red">410 公里</span>：橄欖石轉變為瓦茲利石 (β-phase)。</li>
+                        <li><span class="highlight-red">660 公里</span>：尖晶石分解為<span class="highlight-red">矽酸鹽鈣鈦礦 (perovskite)</span>與方鎂鐵礦，鈣鈦礦因此成為地球上最豐富的礦物。</li>
+                    </ul>
+                    <p><span class="highlight-red">地核主要由鐵組成，但含有約 10-15% 的輕元素</span>（如硫、氧、矽、氫），以解釋觀測到的較低密度。內核之所以為固態，是因為極高壓力提高了鐵的熔點（固相線），使其在超過 5000°C 的高溫下仍保持固態。</p>
+                </div>
+                <!-- 3.8 無問題討論 -->
+            </div>
+
+            <!-- 底部導覽按鈕 -->
+            <div class="mt-12 flex justify-between items-center border-t border-gray-200 pt-6">
+                <button id="prevBtn" onclick="changePageOffset(-1)" class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-black font-bold rounded-lg transition-colors hidden">
+                    &larr; 上一頁
+                </button>
+                <div class="flex-grow"></div>
+                <button id="nextBtn" onclick="changePageOffset(1)" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors">
+                    下一頁 &rarr;
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 8;
+
+        // 切換側邊欄
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // 上一頁/下一頁
+        function changePageOffset(offset) {
+            let newPage = currentPage + offset;
+            if(newPage >= 1 && newPage <= totalPages) {
+                changePage(newPage);
+            }
+        }
+
+        // 切換至指定頁面
+        function changePage(pageNum) {
+            // 隱藏所有頁面
+            document.querySelectorAll('.page-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 顯示目標頁面
+            document.getElementById('page' + pageNum).classList.add('active');
+            currentPage = pageNum;
+            
+            // 更新頁碼
+            document.getElementById('page-num').innerText = currentPage;
+
+            // 處理按鈕顯示狀態
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (currentPage === 1) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+
+            if (currentPage === totalPages) {
+                nextBtn.classList.add('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+            }
+
+            // 若在手機模式點擊選單，切換後自動關閉選單
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
+            // 滾動回頁面頂部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
